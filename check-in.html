@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI-Tracking</title>
+    <link rel="stylesheet" href="check-in.css">
+</head>
+
+<body>
+<div class="container">
+
+    <div class="logo">
+        <img src="imgs/Logo.png" alt="Company Logo">
+    </div>
+
+    <h1 class="title">Employee Check-In</h1>
+
+    <form id="checkinForm">
+
+        <!-- Employee Information -->
+        <div class="section">
+            <h2>Employee Information</h2>
+            <div class="input-group">
+                <label for="CheckInDate">Date</label>
+                <input type="text" id="CheckInDate" name="CheckInDate" readonly>
+            <div class="input-group">
+                <label for="CheckInTime">Time</label>
+                <input type="text" id="CheckInTime" name="CheckInTime" readonly>
+               </div>
+            </div>
+            <div class="input-group">
+                <label for="FirstName">Firstname</label>
+                <input type="text" id="FirstName" name="FirstName" required>
+            </div>
+
+            <div class="input-group">
+                <label for="ID">ID</label>
+                <input type="text" id="ID" name="ID" required>
+            </div>
+        </div>
+
+        <!-- Daily Tasks -->
+        <div class="section">
+    <h2>Daily Tasks</h2>
+
+    <div id="tasksContainer">
+        <!-- Task rows will live here -->
+        <div class="task-row">
+            <div class="task-field">
+                <label for="Task1">Task 1</label>
+                <input type="text" id="Task1" name="Task1" required>
+            </div>
+
+            <div class="duration-field">
+                <label for="Duration1">Estimated Duration (hours)</label>
+                <input type="number" id="Duration1" name="Duration1" min="0" step="0.5" required>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" id="addTask">+</button>
+</div> 
+
+      <div class="form-actions">
+            <button type="submit" class="submit-btn">Submit</button>
+        </div>
+
+    </form>
+
+</div>
+
+
+
+
+<script src="checkin.js"></script>
+</body>
+</html>
