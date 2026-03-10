@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task-Track</title>
-    <link rel="stylesheet" href="check-in.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task Tracker</title>
+<link rel="stylesheet" href="check-in.css">
 </head>
 
 <body>
+
 <div class="container">
 
     <div class="logo">
@@ -21,56 +22,91 @@
         <!-- Employee Information -->
         <div class="section">
             <h2>Employee Information</h2>
+
             <div class="input-group">
                 <label for="CheckInDate">Date</label>
                 <input type="text" id="CheckInDate" name="CheckInDate" readonly>
+            </div>
+
             <div class="input-group">
                 <label for="CheckInTime">Time</label>
                 <input type="text" id="CheckInTime" name="CheckInTime" readonly>
-               </div>
             </div>
+
             <div class="input-group">
-                <label for="FirstName">Firstname</label>
+                <label for="FirstName">First Name</label>
                 <input type="text" id="FirstName" name="FirstName" required>
             </div>
 
             <div class="input-group">
-                <label for="ID">ID</label>
+                <label for="LastName">Last Name</label>
+                <input type="text" id="LastName" name="LastName" required>
+            </div>
+
+            <div class="input-group">
+                <label for="ID">Employee ID</label>
                 <input type="text" id="ID" name="ID" required>
             </div>
+
+            <div class="input-group">
+                <label for="formType">Form Type</label>
+                <select id="formType" name="formType" required>
+                    <option value="CheckIn">Check In</option>
+                    <option value="CheckOut">Check Out</option>
+                </select>
+            </div>
+
         </div>
+
 
         <!-- Daily Tasks -->
         <div class="section">
-    <h2>Daily Tasks</h2>
+            <h2>Daily Tasks</h2>
 
-    <div id="tasksContainer">
-        <!-- Task rows will live here -->
-        <div class="task-row">
-            <div class="task-field">
-                <label for="Task1">Task 1</label>
-                <input type="text" id="Task1" name="Task1" required>
+            <div id="tasksContainer">
+
+                <div class="task-row">
+
+                    <div class="task-field">
+                        <label for="Task1">Task 1</label>
+                        <input type="text" id="Task1" name="Task1" required>
+                    </div>
+
+                    <div class="duration-field">
+                        <label for="Duration1">Estimated Duration (hours)</label>
+                        <input type="number" id="Duration1" name="Duration1" min="0" step="0.5" required>
+                    </div>
+
+                    <div class="assigned-field">
+                        <label for="AssignedBy1">Assigned By</label>
+                        <input type="text" id="AssignedBy1" name="AssignedBy1" placeholder="Manager / Supervisor">
+                    </div>
+
+                   <div class="status-field toggle-field">
+                        <label for="Status1">Status</label>
+                        <select id="Status1" name="Status1">
+                        <option value="Pending">Pending</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Completed">Completed</option>
+                        </select>
+                </div>
+
+                <div class="comment-field toggle-field">
+                  <label for="Comment1">Comment</label>
+                  <input type="text" id="Comment1" name="Comment1">
+               </div>
+
+                </div>
+
             </div>
 
-            <div class="duration-field">
-                <label for="Duration1">Estimated Duration (hours)</label>
-                <input type="number" id="Duration1" name="Duration1" min="0" step="0.5" required>
-            </div>
-             <div class="status-field">
-                 <label for="Status1">Status</label>
-                  <select id="Status1" name="Status1">
-                    <option value="Pending">Pending</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-        </select>
-    </div>
+            <button type="button" id="addTask">+</button>
+
         </div>
-    </div>
 
-    <button type="button" id="addTask">+</button>
-</div> 
 
-      <div class="form-actions">
+
+        <div class="form-actions">
             <button type="submit" class="submit-btn">Submit</button>
         </div>
 
@@ -78,9 +114,7 @@
 
 </div>
 
-
-
-
 <script src="checkin.js"></script>
+
 </body>
 </html>

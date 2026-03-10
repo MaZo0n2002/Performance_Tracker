@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-# ---------- CREATE DATABASE + TABLE ----------
+# ---------- DATABASE ----------
 def init_db():
 
     conn = sqlite3.connect("database.db")
@@ -18,10 +18,14 @@ def init_db():
         date TEXT,
         time TEXT,
         first_name TEXT,
+        last_name TEXT,
         employee_id TEXT,
         task TEXT,
         duration REAL,
-        status TEXT
+        assigned_by TEXT,
+        status TEXT,
+        comment TEXT,
+        form_type TEXT
     )
     """)
 
@@ -32,7 +36,7 @@ def init_db():
 init_db()
 
 
-# ---------- SUBMIT DATA ----------
+# ---------- SUBMIT ----------
 @app.route("/submit", methods=["POST"])
 def submit():
 
@@ -41,7 +45,10 @@ def submit():
     date = data["date"]
     time = data["time"]
     first_name = data["firstName"]
+    last_name = data["lastName"]
     employee_id = data["employeeID"]
+    form_type = data["formType"]
+
     tasks = data["tasks"]
 
     conn = sqlite3.connect("database.db")
@@ -49,24 +56,37 @@ def submit():
 
     for task in tasks:
 
+        assigned_by = task["assignedBy"]
+        status = task["status"]
+        comment = task["comment"]
+
+        # If CheckIn → status/comment NULL
+        if form_type == "CheckIn":
+            status = None
+            comment = None
+
         cursor.execute("""
         INSERT INTO tasks
-        (date, time, first_name, employee_id, task, duration, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, (
+        (date,time,first_name,last_name,employee_id,task,duration,assigned_by,status,comment,form_type)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)
+        """,(
             date,
             time,
             first_name,
+            last_name,
             employee_id,
             task["task"],
             task["duration"],
-            task["status"]
+            assigned_by,
+            status,
+            comment,
+            form_type
         ))
 
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "Saved successfully"})
+    return jsonify({"message":"Saved successfully"})
 
 
 # ---------- VIEW DATA ----------
@@ -76,7 +96,22 @@ def view_data():
     conn = sqlite3.connect("database.db")
     cursor = conn.cursor()
 
-    cursor.execute("SELECT date, time, first_name, employee_id, task, duration, status FROM tasks")
+    cursor.execute("""
+    SELECT
+    date,
+    time,
+    first_name,
+    last_name,
+    employee_id,
+    task,
+    duration,
+    assigned_by,
+    status,
+    comment,
+    form_type
+    FROM tasks
+    """)
+
     rows = cursor.fetchall()
 
     conn.close()
@@ -84,6 +119,6 @@ def view_data():
     return render_template("view_data.html", rows=rows)
 
 
-# ---------- RUN SERVER ----------
+# ---------- RUN ----------
 if __name__ == "__main__":
     app.run(debug=True)

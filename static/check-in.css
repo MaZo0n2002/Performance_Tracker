@@ -153,6 +153,37 @@ select:focus{
     transform: scale(1.08);
 }
 
+
+
+/* Disabled input fields */
+input:disabled,
+select:disabled,
+textarea:disabled {
+    background-color: #f2f2f2;
+    color: #777;
+    border: 1px solid #ddd;
+    cursor: not-allowed;
+}
+
+/* Disabled container fields */
+.toggle-field input:disabled,
+.toggle-field select:disabled {
+    background-color: #f5f7fb;
+    border-color: #dcdcdc;
+    color: #888;
+}
+
+/* Optional: slightly fade disabled sections */
+.toggle-field:has(input:disabled),
+.toggle-field:has(select:disabled) {
+    opacity: 0.7;
+}
+input[readonly] {
+    background-color: #f1f4fb;
+    color: #333;
+    border: 1px solid #d0d7e2;
+    cursor: not-allowed;
+}
 /* Submit button */
 .submit-btn{
     width: 100%;
@@ -197,3 +228,6 @@ input[readonly]{
     width:100%;
 }
 }
+
+
+

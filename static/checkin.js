@@ -2,6 +2,8 @@ let taskCount = 1;
 
 const addTaskButton = document.getElementById("addTask");
 const tasksContainer = document.getElementById("tasksContainer");
+const form = document.getElementById("checkinForm");
+const formType = document.getElementById("formType");
 
 
 // ADD TASK
@@ -14,22 +16,32 @@ addTaskButton.addEventListener("click", () => {
 
     taskRow.innerHTML = `
         <div class="task-field">
-            <label for="Task${taskCount}">Task ${taskCount}</label>
-            <input type="text" id="Task${taskCount}" name="Task${taskCount}" required>
+            <label>Task ${taskCount}</label>
+            <input type="text" required>
         </div>
 
         <div class="duration-field">
-            <label for="Duration${taskCount}">Estimated Duration (hours)</label>
-            <input type="number" id="Duration${taskCount}" name="Duration${taskCount}" min="0" step="0.5" required>
+            <label>Estimated Duration (hours)</label>
+            <input type="number" min="0" step="0.5" required>
         </div>
 
-        <div class="status-field">
-            <label for="Status${taskCount}">Status</label>
-            <select id="Status${taskCount}" name="Status${taskCount}">
+        <div class="assigned-field">
+            <label>Assigned By</label>
+            <input type="text">
+        </div>
+
+        <div class="status-field toggle-field">
+            <label>Status</label>
+            <select>
                 <option value="Pending">Pending</option>
                 <option value="In Progress">In Progress</option>
                 <option value="Completed">Completed</option>
             </select>
+        </div>
+
+        <div class="comment-field toggle-field">
+            <label>Comment</label>
+            <input type="text">
         </div>
 
         <button type="button" class="remove-btn">✖</button>
@@ -38,6 +50,8 @@ addTaskButton.addEventListener("click", () => {
     tasksContainer.appendChild(taskRow);
 
     addRemoveEvent(taskRow);
+
+    toggleFields();
 });
 
 
@@ -46,17 +60,12 @@ function addRemoveEvent(taskRow){
 
     const removeButton = taskRow.querySelector(".remove-btn");
 
-    removeButton.addEventListener("click", function(){
+    removeButton.addEventListener("click", () => {
 
         if(tasksContainer.children.length > 1){
-
             taskRow.remove();
-            updateTaskNumbers();
-
-        }else{
-
+        } else {
             alert("At least one task is required.");
-
         }
 
     });
@@ -64,40 +73,8 @@ function addRemoveEvent(taskRow){
 }
 
 
-// UPDATE TASK NUMBERS
-function updateTaskNumbers(){
-
-    const allRows = document.querySelectorAll(".task-row");
-
-    taskCount = 0;
-
-    allRows.forEach((row)=>{
-
-        taskCount++;
-
-        const label = row.querySelector(".task-field label");
-        const input = row.querySelector(".task-field input");
-        const durationInput = row.querySelector(".duration-field input");
-        const statusInput = row.querySelector(".status-field select");
-
-        label.textContent = `Task ${taskCount}`;
-
-        input.name = `Task${taskCount}`;
-        input.id = `Task${taskCount}`;
-
-        durationInput.name = `Duration${taskCount}`;
-        durationInput.id = `Duration${taskCount}`;
-
-        statusInput.name = `Status${taskCount}`;
-        statusInput.id = `Status${taskCount}`;
-
-    });
-
-}
-
-
 // AUTO DATE + TIME
-window.addEventListener("DOMContentLoaded", ()=>{
+window.addEventListener("DOMContentLoaded", () => {
 
     const dateField = document.getElementById("CheckInDate");
     const timeField = document.getElementById("CheckInTime");
@@ -119,37 +96,66 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
     timeField.value = `${hours}:${minutes} ${ampm}`;
 
+    toggleFields();
 });
 
 
-// FORM SUBMIT
-const form = document.getElementById("checkinForm");
+// CHECKIN / CHECKOUT
+formType.addEventListener("change", toggleFields);
 
-form.addEventListener("submit", async function(e){
+function toggleFields(){
+
+    const type = formType.value;
+
+    const fields = document.querySelectorAll(".toggle-field");
+
+    fields.forEach(field => {
+
+        const input = field.querySelector("input, select");
+
+        if(type === "CheckIn"){
+            input.disabled = true;
+        } else {
+            input.disabled = false;
+        }
+
+    });
+
+}
+
+
+// FORM SUBMIT
+form.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
     const date = document.getElementById("CheckInDate").value;
     const time = document.getElementById("CheckInTime").value;
     const firstName = document.getElementById("FirstName").value;
+    const lastName = document.getElementById("LastName").value;
     const employeeID = document.getElementById("ID").value;
+    const formTypeValue = formType.value;
 
-    const taskRows = document.querySelectorAll(".task-row");
+    const taskRows = tasksContainer.querySelectorAll(".task-row");
 
     let tasks = [];
 
-    taskRows.forEach(row=>{
+    taskRows.forEach(row => {
 
         const task = row.querySelector(".task-field input").value.trim();
         const duration = row.querySelector(".duration-field input").value;
+        const assignedBy = row.querySelector(".assigned-field input").value;
         const status = row.querySelector(".status-field select").value;
+        const comment = row.querySelector(".comment-field input").value;
 
         if(task !== ""){
 
             tasks.push({
                 task,
                 duration,
-                status
+                assignedBy,
+                status,
+                comment
             });
 
         }
@@ -160,7 +166,9 @@ form.addEventListener("submit", async function(e){
         date,
         time,
         firstName,
+        lastName,
         employeeID,
+        formType: formTypeValue,
         tasks
     };
 
@@ -182,13 +190,12 @@ form.addEventListener("submit", async function(e){
 
         form.reset();
 
-        location.reload();
+        toggleFields();
 
     }catch(error){
 
-        alert("Error saving data");
-
         console.error(error);
+        alert("Error saving data");
 
     }
 

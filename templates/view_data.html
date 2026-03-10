@@ -11,6 +11,10 @@ padding:40px;
 background:#f4f6fb;
 }
 
+h2{
+margin-bottom:20px;
+}
+
 table{
 width:100%;
 border-collapse:collapse;
@@ -28,6 +32,19 @@ background:#5D84FF;
 color:white;
 }
 
+.filters{
+margin-bottom:20px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.filters input{
+padding:8px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
 </style>
 
 </head>
@@ -36,16 +53,28 @@ color:white;
 
 <h2>Employee Task Data</h2>
 
-<table>
+<div class="filters">
+
+<input type="text" id="filterName" placeholder="Filter by name">
+<input type="text" id="filterID" placeholder="Filter by Employee ID">
+<input type="text" id="filterTask" placeholder="Filter by Task">
+<input type="text" id="filterStatus" placeholder="Filter by Status">
+
+</div>
+
+<table id="taskTable">
 
 <tr>
 <th>Date</th>
 <th>Time</th>
 <th>First Name</th>
+<th>Last Name</th>
 <th>Employee ID</th>
 <th>Task</th>
 <th>Duration</th>
+<th>Assigned By</th>
 <th>Status</th>
+<th>Comment</th>
 </tr>
 
 {% for row in rows %}
@@ -58,11 +87,82 @@ color:white;
 <td>{{row[4]}}</td>
 <td>{{row[5]}}</td>
 <td>{{row[6]}}</td>
+
+<td>
+{% if row[7] %}
+{{row[7]}}
+{% else %}
+-
+{% endif %}
+</td>
+
+<td>
+{% if row[10] == "CheckIn" %}
+NULL
+{% else %}
+{{row[8]}}
+{% endif %}
+</td>
+
+<td>
+{% if row[10] == "CheckIn" %}
+NULL
+{% else %}
+{{row[9]}}
+{% endif %}
+</td>
+
 </tr>
 
 {% endfor %}
 
 </table>
+
+
+<script>
+
+const nameFilter = document.getElementById("filterName");
+const idFilter = document.getElementById("filterID");
+const taskFilter = document.getElementById("filterTask");
+const statusFilter = document.getElementById("filterStatus");
+
+const table = document.getElementById("taskTable");
+
+const rows = table.getElementsByTagName("tr");
+
+function filterTable(){
+
+for(let i=1;i<rows.length;i++){
+
+let name = rows[i].cells[2].textContent.toLowerCase();
+let lastname = rows[i].cells[3].textContent.toLowerCase();
+let id = rows[i].cells[4].textContent.toLowerCase();
+let task = rows[i].cells[5].textContent.toLowerCase();
+let status = rows[i].cells[8].textContent.toLowerCase();
+
+let nameInput = nameFilter.value.toLowerCase();
+let idInput = idFilter.value.toLowerCase();
+let taskInput = taskFilter.value.toLowerCase();
+let statusInput = statusFilter.value.toLowerCase();
+
+let match =
+(name.includes(nameInput) || lastname.includes(nameInput)) &&
+id.includes(idInput) &&
+task.includes(taskInput) &&
+status.includes(statusInput);
+
+rows[i].style.display = match ? "" : "none";
+
+}
+
+}
+
+nameFilter.addEventListener("keyup", filterTable);
+idFilter.addEventListener("keyup", filterTable);
+taskFilter.addEventListener("keyup", filterTable);
+statusFilter.addEventListener("keyup", filterTable);
+
+</script>
 
 </body>
 </html>
